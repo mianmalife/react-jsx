@@ -3,6 +3,10 @@ class ElementWrapper {
         this.root = document.createElement(type)
     }
     setAttribute(name, value) {
+        if(name.match(/^on([\s\S]+)$/)) {
+            let name = RegExp.$1.replace(/^[\s\S]/, s => s.toLocaleLowerCase())
+            this.root.addEventListener(name, value)
+        }
         this.root.setAttribute(name, value)
     }
     appendChild(vchild) {
@@ -25,8 +29,10 @@ class TextWrapper {
 export class Component {
     constructor() {
         this.children = []
+        this.props = Object.create(null)
     }
     setAttribute(name, value) {
+        this.props[name] = value
         this[name] = value
     }
     mountTo(parent) {
